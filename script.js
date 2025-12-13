@@ -9,8 +9,8 @@ let roleIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
 let typeSpeed = 150;
-let deleteSpeed = 100;
-let pauseBetween = 2500;
+let deleteSpeed = 150;
+let pauseBetween = 4000;
 
 function typeRoles() {
     const currentRole = roles[roleIndex];
