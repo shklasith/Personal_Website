@@ -12,14 +12,22 @@ let typeSpeed = 150;
 let deleteSpeed = 150;
 let pauseBetween = 4000;
 
+let timer; // Global timer variable
+
 function typeRoles() {
+    // Clear any existing timer to prevent multiples
+    clearTimeout(timer);
+
     const currentRole = roles[roleIndex];
     let nextSpeed = typeSpeed;
 
     if (isDeleting) {
-        roleElement.textContent = currentRole.substring(0, charIndex - 1);
-        charIndex--;
-        nextSpeed = deleteSpeed;
+        // Bounds check
+        if (charIndex > 0) {
+            roleElement.textContent = currentRole.substring(0, charIndex - 1);
+            charIndex--;
+            nextSpeed = deleteSpeed;
+        }
     } else {
         roleElement.textContent = currentRole.substring(0, charIndex + 1);
         charIndex++;
@@ -35,7 +43,7 @@ function typeRoles() {
         nextSpeed = 500;
     }
 
-    setTimeout(typeRoles, nextSpeed);
+    timer = setTimeout(typeRoles, nextSpeed);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
