@@ -8,9 +8,9 @@ const roleElement = document.getElementById("role-text");
 let roleIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
-let typeSpeed = 150;
-let deleteSpeed = 150;
-let pauseBetween = 4000;
+let typeSpeed = 100;
+let deleteSpeed = 50;
+let pauseBetween = 2000;
 
 // Use a global property on window to strictly ensure single execution instance
 // even if the script is reloaded in some environments without full page refresh.
