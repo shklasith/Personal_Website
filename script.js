@@ -14,29 +14,28 @@ let pauseBetween = 4000;
 
 function typeRoles() {
     const currentRole = roles[roleIndex];
+    let nextSpeed = typeSpeed;
 
     if (isDeleting) {
         roleElement.textContent = currentRole.substring(0, charIndex - 1);
         charIndex--;
-        setTimeout(typeRoles, deleteSpeed);
+        nextSpeed = deleteSpeed;
     } else {
         roleElement.textContent = currentRole.substring(0, charIndex + 1);
         charIndex++;
-        setTimeout(typeRoles, typeSpeed);
+        nextSpeed = typeSpeed;
     }
 
     if (!isDeleting && charIndex === currentRole.length) {
         isDeleting = true;
-        setTimeout(typeRoles, pauseBetween); // Pause before deleting
-        return;
-    }
-
-    if (isDeleting && charIndex === 0) {
+        nextSpeed = pauseBetween;
+    } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         roleIndex = (roleIndex + 1) % roles.length;
-        setTimeout(typeRoles, 500); // Small pause before next word
-        return;
+        nextSpeed = 500;
     }
+
+    setTimeout(typeRoles, nextSpeed);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
