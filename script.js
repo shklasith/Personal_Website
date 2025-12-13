@@ -12,41 +12,49 @@ let typeSpeed = 150;
 let deleteSpeed = 150;
 let pauseBetween = 4000;
 
-let timer; // Global timer variable
+// Use a global property on window to strictly ensure single execution instance
+// even if the script is reloaded in some environments without full page refresh.
+window.typingEffectTimer = null;
 
 function typeRoles() {
-    // Clear any existing timer to prevent multiples
-    clearTimeout(timer);
+    clearTimeout(window.typingEffectTimer);
 
     const currentRole = roles[roleIndex];
     let nextSpeed = typeSpeed;
 
     if (isDeleting) {
-        // Bounds check
-        if (charIndex > 0) {
-            roleElement.textContent = currentRole.substring(0, charIndex - 1);
-            charIndex--;
-            nextSpeed = deleteSpeed;
-        }
+        // Deleting phase
+        roleElement.textContent = currentRole.substring(0, charIndex - 1);
+        charIndex--;
+        nextSpeed = deleteSpeed;
     } else {
+        // Typing phase
         roleElement.textContent = currentRole.substring(0, charIndex + 1);
         charIndex++;
         nextSpeed = typeSpeed;
     }
 
-    if (!isDeleting && charIndex === currentRole.length) {
+    // Check boundaries
+    if (!isDeleting && charIndex >= currentRole.length) {
+        // Finished typing word
         isDeleting = true;
         nextSpeed = pauseBetween;
-    } else if (isDeleting && charIndex === 0) {
+    } else if (isDeleting && charIndex <= 0) {
+        // Finished deleting word
         isDeleting = false;
         roleIndex = (roleIndex + 1) % roles.length;
         nextSpeed = 500;
     }
 
-    timer = setTimeout(typeRoles, nextSpeed);
+    window.typingEffectTimer = setTimeout(typeRoles, nextSpeed);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Explicitly reset on load
+    if (window.typingEffectTimer) clearTimeout(window.typingEffectTimer);
+    roleIndex = 0;
+    charIndex = 0;
+    isDeleting = false;
     typeRoles();
     initCanvas();
 });
