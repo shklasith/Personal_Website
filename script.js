@@ -1,20 +1,20 @@
 // Typing Animation
 const roles = [
-    "AI/ML Enthusiast", 
-    "Backend Developer", 
+    "AI/ML Enthusiast",
+    "Backend Developer",
     "Digital Marketer"
 ];
 const roleElement = document.getElementById("role-text");
 let roleIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
-let typeSpeed = 100;
-let deleteSpeed = 50;
-let pauseBetween = 2000;
+let typeSpeed = 150;
+let deleteSpeed = 100;
+let pauseBetween = 2500;
 
 function typeRoles() {
     const currentRole = roles[roleIndex];
-    
+
     if (isDeleting) {
         roleElement.textContent = currentRole.substring(0, charIndex - 1);
         charIndex--;
@@ -28,7 +28,7 @@ function typeRoles() {
     if (!isDeleting && charIndex === currentRole.length) {
         isDeleting = true;
         setTimeout(typeRoles, pauseBetween); // Pause before deleting
-        return; 
+        return;
     }
 
     if (isDeleting && charIndex === 0) {
@@ -101,11 +101,11 @@ function createParticles() {
 
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         particles[i].draw();
-        
+
         // Connect particles
         for (let j = i; j < particles.length; j++) {
             const dx = particles[i].x - particles[j].x;
@@ -114,7 +114,7 @@ function animateParticles() {
 
             if (distance < 150) {
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance/1500})`;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance / 1500})`;
                 ctx.lineWidth = 1;
                 ctx.moveTo(particles[i].x, particles[i].y);
                 ctx.lineTo(particles[j].x, particles[j].y);
@@ -122,6 +122,6 @@ function animateParticles() {
             }
         }
     }
-    
+
     requestAnimationFrame(animateParticles);
 }
