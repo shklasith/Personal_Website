@@ -1,7 +1,7 @@
 // Typing Animation
 const roles = [
-    "AI/ML Enthusiast",
-    "Backend Developer",
+    "AI and ML Engineer",
+    "Full Stack Developer",
     "Digital Marketer"
 ];
 const roleElement = document.getElementById("role-text");
