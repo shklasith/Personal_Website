@@ -178,3 +178,36 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 });
+
+// Contact Form Handler
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Visual feedback
+        const btn = contactForm.querySelector('button');
+        const originalText = btn.textContent;
+        const statusMsg = document.getElementById('formStatus');
+        
+        btn.textContent = 'Sending...';
+        btn.style.opacity = '0.7';
+        
+        // Simulate network delay
+        setTimeout(() => {
+            btn.textContent = 'Msg Sent!';
+            btn.style.background = '#10b981'; // Green color for success
+            statusMsg.textContent = "Thanks for reaching out! This is a demo form.";
+            statusMsg.style.color = '#10b981';
+            
+            // Reset after delay
+            setTimeout(() => {
+                contactForm.reset();
+                btn.textContent = originalText;
+                btn.style.background = ''; // Revert to CSS
+                btn.style.opacity = '1';
+                statusMsg.textContent = '';
+            }, 3000);
+        }, 1500);
+    });
+}
