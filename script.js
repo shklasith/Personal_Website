@@ -107,93 +107,53 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Staggered Animations for Grid Items (Cards)
-    const staggeredSelectors = [
-        ".glass-card",
-        ".service-card",
-        ".project-card",
-        ".timeline-item",
-        ".skill-tag"
+    // Staggered Animations for Grid Items
+    // Using a loop to handle each grid section individually
+    const grids = [
+        { selector: ".services-grid", card: ".service-card" },
+        { selector: ".projects-grid", card: ".project-card" },
+        { selector: ".skills-grid", card: ".skill-category" }, // Animate the whole category card
+        { selector: ".blog-grid", card: ".blog-card" }
     ];
 
-    staggeredSelectors.forEach(selector => {
-        // We select groups of elements based on their container to stagger strictly within that container
-        // Or we can just just batch them if they are common enough. 
-        // For simplicity and effectiveness, let's treat common grids.
-
-        // However, indiscriminately selecting all .glass-card might be too broad if we want to stagger them per section.
-        // Let's rely on ScrollTrigger batching or simple per-element trigger if we want simplicity.
-        // But staggering looks better. Let's try to animate containers' children.
-    });
-
-    // Better Reusable Stagger approach:
-    // About Services
-    gsap.from(".services-grid .service-card", {
-        scrollTrigger: {
-            trigger: ".services-grid",
-            start: "top 85%",
-        },
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power2.out"
-    });
-
-    // Projects
-    gsap.from(".projects-grid .project-card", {
-        scrollTrigger: {
-            trigger: ".projects-grid",
-            start: "top 85%",
-        },
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power2.out"
-    });
-
-    // Skills Categories
-    gsap.from(".skills-grid .skill-category", {
-        scrollTrigger: {
-            trigger: ".skills-grid",
-            start: "top 85%",
-        },
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power2.out"
+    grids.forEach(grid => {
+        const container = document.querySelector(grid.selector);
+        if (container) {
+            const cards = container.querySelectorAll(grid.card);
+            if (cards.length > 0) {
+                gsap.from(cards, {
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top 90%",
+                        toggleActions: "play none none reverse"
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: "power2.out",
+                    clearProps: "all"
+                });
+            }
+        }
     });
 
     // Experience & Education Timeline items
-    // Since timelines are vertical, animating them one by one as they come into view is often better than a container stagger if they are tall.
-    // But let's try a batch or per-item trigger.
     gsap.utils.toArray(".timeline-item").forEach(item => {
         gsap.from(item, {
             scrollTrigger: {
                 trigger: item,
                 start: "top 90%",
+                toggleActions: "play none none reverse"
             },
             x: -30,
             opacity: 0,
             duration: 0.8,
-            ease: "power2.out"
+            ease: "power2.out",
+            clearProps: "all"
         });
     });
 
-    // Blog Grid
-    gsap.from(".blog-grid .blog-card", {
-        scrollTrigger: {
-            trigger: ".blog-grid",
-            start: "top 85%",
-        },
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power2.out"
-    });
 
     // Typing Init
     if (window.typingEffectTimer) clearTimeout(window.typingEffectTimer);
