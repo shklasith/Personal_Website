@@ -342,8 +342,14 @@ h1 {
         /* Mobile menu to be implemented later if needed */
     }
 
+    .container {
+        height: auto;
+        min-height: calc(100vh - 80px);
+    }
+
     .hero {
         padding-top: 2rem;
+        padding-bottom: 6rem;
     }
 
     .description {
