@@ -134,6 +134,7 @@ h1 {
 
 .highlight {
     background: linear-gradient(135deg, #ffffff 0%, var(--accent-color) 100%);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
@@ -282,38 +283,7 @@ h1 {
 }
 
 
-/* Animations */
-.fade-in {
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out forwards;
-}
 
-.fade-in-delay-1 {
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out 0.2s forwards;
-}
-
-.fade-in-delay-2 {
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out 0.4s forwards;
-}
-
-.fade-in-delay-3 {
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out 0.6s forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .cursor {
     display: inline-block;
@@ -456,17 +426,7 @@ h1 {
     line-height: 1.5;
 }
 
-/* Scroll Animation Classes */
-.hidden {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease-out;
-}
 
-.show {
-    opacity: 1;
-    transform: translateY(0);
-}
 
 @media (max-width: 768px) {
     .section-title {

@@ -53,6 +53,148 @@ function handleNavbarScroll() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // GSAP Registration
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero Section Animation Timeline
+    const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    heroTl.from(".hero-title", {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        delay: 0.2
+    })
+        .from(".roles-wrapper", {
+            y: 30,
+            opacity: 0,
+            duration: 0.8
+        }, "-=0.4")
+        .from(".description", {
+            y: 20,
+            opacity: 0,
+            duration: 0.8
+        }, "-=0.6")
+        .from(".cta-container", {
+            y: 20,
+            opacity: 0,
+            duration: 0.8
+        }, "-=0.6")
+        .from(".social-links", {
+            y: 20,
+            opacity: 0,
+            duration: 0.8
+        }, "-=0.6")
+        .from(".scroll-indicator", {
+            y: 20,
+            opacity: 0,
+            duration: 0.8
+        }, "-=0.4");
+
+    // Scroll Animations for Sections
+    // Animate Section Titles
+    gsap.utils.toArray(".section-title").forEach(title => {
+        gsap.from(title, {
+            scrollTrigger: {
+                trigger: title,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            },
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            ease: "power2.out"
+        });
+    });
+
+    // Staggered Animations for Grid Items (Cards)
+    const staggeredSelectors = [
+        ".glass-card",
+        ".service-card",
+        ".project-card",
+        ".timeline-item",
+        ".skill-tag"
+    ];
+
+    staggeredSelectors.forEach(selector => {
+        // We select groups of elements based on their container to stagger strictly within that container
+        // Or we can just just batch them if they are common enough. 
+        // For simplicity and effectiveness, let's treat common grids.
+
+        // However, indiscriminately selecting all .glass-card might be too broad if we want to stagger them per section.
+        // Let's rely on ScrollTrigger batching or simple per-element trigger if we want simplicity.
+        // But staggering looks better. Let's try to animate containers' children.
+    });
+
+    // Better Reusable Stagger approach:
+    // About Services
+    gsap.from(".services-grid .service-card", {
+        scrollTrigger: {
+            trigger: ".services-grid",
+            start: "top 85%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power2.out"
+    });
+
+    // Projects
+    gsap.from(".projects-grid .project-card", {
+        scrollTrigger: {
+            trigger: ".projects-grid",
+            start: "top 85%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power2.out"
+    });
+
+    // Skills Categories
+    gsap.from(".skills-grid .skill-category", {
+        scrollTrigger: {
+            trigger: ".skills-grid",
+            start: "top 85%",
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power2.out"
+    });
+
+    // Experience & Education Timeline items
+    // Since timelines are vertical, animating them one by one as they come into view is often better than a container stagger if they are tall.
+    // But let's try a batch or per-item trigger.
+    gsap.utils.toArray(".timeline-item").forEach(item => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: "top 90%",
+            },
+            x: -30,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        });
+    });
+
+    // Blog Grid
+    gsap.from(".blog-grid .blog-card", {
+        scrollTrigger: {
+            trigger: ".blog-grid",
+            start: "top 85%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power2.out"
+    });
+
     // Typing Init
     if (window.typingEffectTimer) clearTimeout(window.typingEffectTimer);
     roleIndex = 0;
@@ -120,7 +262,7 @@ function createParticles() {
     // Adjust density based on screen size
     const densityDivisor = window.innerWidth < 768 ? 20000 : 12000;
     const numberOfParticles = (canvas.width * canvas.height) / densityDivisor;
-    
+
     for (let i = 0; i < numberOfParticles; i++) {
         particles.push(new Particle());
     }
@@ -153,53 +295,29 @@ function animateParticles() {
     requestAnimationFrame(animateParticles);
 }
 
-// Intersection Observer for Scroll Animations
-const observerOptions = {
-    threshold: 0.15,
-    rootMargin: "0px 0px -50px 0px"
-};
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('show');
-            observer.unobserve(entry.target); // Animates only once
-        }
-    });
-}, observerOptions);
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Other existing inits...
-    
-    // Select elements to animate
-    const hiddenElements = document.querySelectorAll('.glass-card, .section-title');
-    hiddenElements.forEach((el) => {
-        el.classList.add('hidden'); // Initially hide
-        observer.observe(el);
-    });
-});
 
 // Contact Form Handler
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
+
         // Visual feedback
         const btn = contactForm.querySelector('button');
         const originalText = btn.textContent;
         const statusMsg = document.getElementById('formStatus');
-        
+
         btn.textContent = 'Sending...';
         btn.style.opacity = '0.7';
-        
+
         // Simulate network delay
         setTimeout(() => {
             btn.textContent = 'Msg Sent!';
             btn.style.background = '#10b981'; // Green color for success
             statusMsg.textContent = "Thanks for reaching out! This is a demo form.";
             statusMsg.style.color = '#10b981';
-            
+
             // Reset after delay
             setTimeout(() => {
                 contactForm.reset();
