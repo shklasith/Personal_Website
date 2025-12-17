@@ -8,12 +8,10 @@ const roleElement = document.getElementById("role-text");
 let roleIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
-let typeSpeed = 100;
-let deleteSpeed = 50;
-let pauseBetween = 2000;
+let typeSpeed = 80;
+let deleteSpeed = 40;
+let pauseBetween = 2500;
 
-// Use a global property on window to strictly ensure single execution instance
-// even if the script is reloaded in some environments without full page refresh.
 window.typingEffectTimer = null;
 
 function typeRoles() {
@@ -23,24 +21,19 @@ function typeRoles() {
     let nextSpeed = typeSpeed;
 
     if (isDeleting) {
-        // Deleting phase
         roleElement.textContent = currentRole.substring(0, charIndex - 1);
         charIndex--;
         nextSpeed = deleteSpeed;
     } else {
-        // Typing phase
         roleElement.textContent = currentRole.substring(0, charIndex + 1);
         charIndex++;
         nextSpeed = typeSpeed;
     }
 
-    // Check boundaries
     if (!isDeleting && charIndex >= currentRole.length) {
-        // Finished typing word
         isDeleting = true;
         nextSpeed = pauseBetween;
     } else if (isDeleting && charIndex <= 0) {
-        // Finished deleting word
         isDeleting = false;
         roleIndex = (roleIndex + 1) % roles.length;
         nextSpeed = 500;
@@ -49,14 +42,29 @@ function typeRoles() {
     window.typingEffectTimer = setTimeout(typeRoles, nextSpeed);
 }
 
+// Navbar Scroll Effect
+function handleNavbarScroll() {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Explicitly reset on load
+    // Typing Init
     if (window.typingEffectTimer) clearTimeout(window.typingEffectTimer);
     roleIndex = 0;
     charIndex = 0;
     isDeleting = false;
     typeRoles();
+
+    // Canvas Init
     initCanvas();
+
+    // Navbar Scroll Listener
+    window.addEventListener('scroll', handleNavbarScroll);
 });
 
 // Canvas Particle Animation
@@ -83,19 +91,20 @@ class Particle {
     constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
-        this.color = 'rgba(255, 255, 255, 0.3)';
+        this.size = Math.random() * 2 + 0.5; // Slightly smaller particles
+        this.speedX = (Math.random() * 0.5 - 0.25); // Slower speed
+        this.speedY = (Math.random() * 0.5 - 0.25);
+        this.color = 'rgba(255, 255, 255, 0.15)'; // More subtle
     }
 
     update() {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        // Bounce off edges
-        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+        if (this.x > canvas.width) this.x = 0;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        if (this.y < 0) this.y = canvas.height;
     }
 
     draw() {
@@ -108,7 +117,10 @@ class Particle {
 
 function createParticles() {
     particles = [];
-    const numberOfParticles = (canvas.width * canvas.height) / 15000; // Density
+    // Adjust density based on screen size
+    const densityDivisor = window.innerWidth < 768 ? 20000 : 12000;
+    const numberOfParticles = (canvas.width * canvas.height) / densityDivisor;
+    
     for (let i = 0; i < numberOfParticles; i++) {
         particles.push(new Particle());
     }
@@ -127,10 +139,10 @@ function animateParticles() {
             const dy = particles[i].y - particles[j].y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < 150) {
+            if (distance < 120) {
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance / 1500})`;
-                ctx.lineWidth = 1;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.05 - distance / 2400})`; // Very subtle lines
+                ctx.lineWidth = 0.5;
                 ctx.moveTo(particles[i].x, particles[i].y);
                 ctx.lineTo(particles[j].x, particles[j].y);
                 ctx.stroke();
