@@ -152,3 +152,29 @@ function animateParticles() {
 
     requestAnimationFrame(animateParticles);
 }
+
+// Intersection Observer for Scroll Animations
+const observerOptions = {
+    threshold: 0.15,
+    rootMargin: "0px 0px -50px 0px"
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target); // Animates only once
+        }
+    });
+}, observerOptions);
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Other existing inits...
+    
+    // Select elements to animate
+    const hiddenElements = document.querySelectorAll('.glass-card, .section-title');
+    hiddenElements.forEach((el) => {
+        el.classList.add('hidden'); // Initially hide
+        observer.observe(el);
+    });
+});
